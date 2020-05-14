@@ -1,0 +1,24 @@
+{
+  "name": "restaurants",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev:api": "nodemon ./bin/www",
+    "dev:app": "cd ng-app && ng serve",
+    "dev": "concurrently --kill-others \"npm run-script dev:api\" \"npm run-script dev:app\"",
+    "build": "cd ng-app && ng build"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "nodemon": "^2.0.3"
+  }
+}
