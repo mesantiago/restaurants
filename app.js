@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var router = express.Router();
 var logger = require('morgan');
+var mongoose = require('mongoose');
+var config = require('./config.json');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -44,5 +46,13 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// connect to database
+app.connectToDatabase = function() {
+  mongoose.connect(config.mongodb, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+}
 
 module.exports = app;
