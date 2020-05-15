@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var RestaurantScheduleSchema = new Schema({
-    day: { type: String, required: true },
+    day: { type: Number, required: true },
     startTime: { type: Number, required: true },
     endTime: { type: Number, required: true },
     restaurant: {
