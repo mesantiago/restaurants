@@ -10,6 +10,7 @@ var populate = require('./populate.js');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var restaurantsRouter = require('./routes/restaurants');
 
 var app = express();
 
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api', router);
 router.use('/users', usersRouter);
+router.use('/restaurants', restaurantsRouter);
 
 // redirect all endpoints to index
 app.use(function(req, res, next) {
