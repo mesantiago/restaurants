@@ -1,4 +1,5 @@
 {
     "mongodb": "",
     "jwtSecret": ""
+    "autopupulate": true,
 }

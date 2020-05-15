@@ -6,6 +6,7 @@ var router = express.Router();
 var logger = require('morgan');
 var mongoose = require('mongoose');
 var config = require('./config.json');
+var populate = require('./populate.js');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -53,6 +54,9 @@ app.connectToDatabase = function() {
     useNewUrlParser: true,
     useUnifiedTopology: true
   });
+  if (config.autopupulate) {
+    populate.restaurants();
+  }
 }
 
 module.exports = app;
