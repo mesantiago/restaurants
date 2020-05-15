@@ -52,6 +52,7 @@ app.use(function(err, req, res, next) {
 
 // connect to database
 app.connectToDatabase = function() {
+  mongoose.set('useCreateIndex', true);
   mongoose.connect(config.mongodb, {
     useNewUrlParser: true,
     useUnifiedTopology: true
