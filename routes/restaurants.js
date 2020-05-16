@@ -14,7 +14,7 @@ router.get('/', function(req, res, next) {
   } = req.query;
   // DEFAULTS
   limit = limit ? parseInt(limit) : 10;
-  let skip = req.query.page ? (parseInt(req.query.page) - 1) * limit : 1;
+  let skip = req.query.page ? (parseInt(req.query.page) - 1) * limit : 0;
   const restaurantQuery = name ? {
     name: { $regex: '^' + name, $options: 'i' }
   } : undefined;
@@ -25,9 +25,21 @@ router.get('/', function(req, res, next) {
       scheduleQuery.day = parseInt(day);
     }
     if (time) {
-      scheduleQuery.startTime = { $gte: parseInt(time) };
-      scheduleQuery.endTime = { $lte: parseInt(time) };
+      scheduleQuery.$or = [
+        { '$and': [
+          { '$expr':{ '$lt': ['$endTime', '$startTime'] } },
+          { $or: [
+            { startTime: { $lte: parseInt(time) } },
+            { endTime: { $gte: parseInt(time) } }
+          ] }
+        ] },
+        { '$and': [
+          { startTime: { $lte: parseInt(time) } },
+          { endTime: { $gte: parseInt(time) } }
+        ] }
+      ];
     }
+    console.log(JSON.stringify(scheduleQuery));
     const aggregation = [
       // Match day & time
       { '$match': scheduleQuery },
@@ -51,7 +63,7 @@ router.get('/', function(req, res, next) {
       { '$project': { 'restaurant': 0 } },
       // Match name
       { '$match': restaurantQuery || {} },
-      // count
+      // Count
       { '$count': 'total' }
     ];
     RestaurantSchedule
@@ -84,7 +96,8 @@ router.get('/', function(req, res, next) {
               total: (count[0] || {}).total || 0,
               totalPages: Math.ceil(((count[0] || {}).total || 0) / limit),
               limit,
-              page: parseInt(page)
+              skip,
+              page: parseInt(page) || 1
             };
           });
       })
@@ -106,7 +119,7 @@ router.get('/', function(req, res, next) {
               total: count,
               totalPages: Math.ceil(count / limit),
               limit,
-              page: parseInt(page)
+              page: parseInt(page) || 1
             };
           });
       })
