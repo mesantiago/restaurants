@@ -6,10 +6,14 @@ import { ServicesModule } from '../services/services.module';
 import { RouterModule } from '@angular/router';
 import { BootstrapModule } from '../bootstrap/bootstrap.module';
 import { PipesModule } from '../pipes/pipes.module';
+import { LoginComponent } from './login/login.component';
+import { RegistrationComponent } from './registration/registration.component';
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
+    LoginComponent,
+    RegistrationComponent
   ],
   imports: [
     CommonModule,

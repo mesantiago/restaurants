@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { RestaurantsService } from './restaurants.service';
+import { UsersService } from './users.service';
 
 @NgModule({
   declarations: [],
@@ -12,7 +13,8 @@ import { RestaurantsService } from './restaurants.service';
   ],
   providers: [
     ApiService,
-    RestaurantsService
+    RestaurantsService,
+    UsersService
   ],
 })
 export class ServicesModule { }

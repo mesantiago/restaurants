@@ -18,28 +18,30 @@ router.post('/login', function(req, res, next) {
   var { email, password } = req.body;
   User.findOne({ email })
     .then(function(user) {
-      user.comparePassword(password, function(error, isMatch) {
-        if (isMatch) {
-          const token = jwt.sign({ user }, config.jwtSecret, {
-            expiresIn: '24h'
-          });
+      if (user) {
+        user.comparePassword(password, function(error, isMatch) {
+          if (isMatch) {
+            const token = jwt.sign({ user }, config.jwtSecret, {
+              expiresIn: '24h'
+            });
 
-          res.json({
-            id: user.id,
-            token
-          });
-        } else {
-          res.status(401).json({
-            message: 'Unauthenticated'
-          });
-        }
-      });
+            res.json({
+              id: user.id,
+              token
+            });
+          } else {
+            res.status(401).json({
+              message: 'Unauthenticated'
+            });
+          }
+        });
+      } else {
+        res.status(404).json({
+          message: 'User Not found'
+        })
+      }
     })
-    .catch(function(error) {
-      res.status(404).json({
-        message: 'User Not found'
-      })
-    });
+    .catch(next);
 });
 
 module.exports = router;
