@@ -1,1 +1,55 @@
-<p>home works!</p>
+<div class="container">
+  <form #searchForm="ngForm" (ngSubmit)="onSubmit(searchForm)" novalidate autocomplete="off">
+    <div class="card mt-2">
+      <div class="card-body">
+        <h5 class="card-title"> Search for restaurant </h5>
+
+        <div class="row">
+          <div class="col-12 form-group">
+            <label for="name"> Name </label>
+            <input name="name" type="text" class="form-control" id="name" #name="ngModel" placeholder="Type name here"
+              [(ngModel)]="search.name" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-md-4 form-group">
+            <label for="date"> Date </label>
+            <input name="date" type="text" id="date" placeholder="Date" #date="ngModel" class="form-control"
+            [(ngModel)]="search.date" bsDatepicker />
+            <!-- [ngClass]="{ 'is-valid': (date.dirty || date.touched || searchForm.submitted) && date.valid, 'is-invalid': (date.dirty || date.touched || searchForm.submitted) && date.invalid }" -->
+          </div>
+          <div class="col-12 col-md-4 form-group">
+            <label for="time"> Time </label>
+            <timepicker name="time" [(ngModel)]="search.time" ngDefaultControl ></timepicker>
+          </div>
+          <div class="col-12 col-md-4">
+            <button type="submit" class="btn btn-primary form-control" [disabled]="searchForm.invalid"> Apply Search </button>
+            <button type="button" class="btn btn-secondary form-control" (click)="clearSearch(searchForm)"> Clear Search </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div *ngIf="restaurants && restaurants.length">
+    <h3> Result: {{ pagination.total }} </h3>
+    <div class="card mb-3"
+      [ngClass]="{'border-warning': search.name && restaurant.name.toLowerCase().indexOf(search.name.toLowerCase()) === 0}"
+      *ngFor="let restaurant of restaurants">
+      <div class="card-header"> {{ restaurant.name }} </div>
+      <div class="card-body">
+        <span class="badge badge-pill"
+        [ngClass]="{'badge-warning': search.time && isTimeMatch(schedule.startTime, schedule.endTime), 'badge-light': !(search.time && isTimeMatch(schedule.startTime, schedule.endTime))}"
+        *ngFor="let schedule of groupSchedule(restaurant.schedule)">
+          <span class="badge badge-pill mr-2"
+            [ngClass]="{'badge-warning': search.date && search.date.getDay() === day, 'badge-light': !(search.date && search.date.getDay() === day)}"
+            *ngFor="let day of schedule.days"> {{ day | days }} </span>
+          <span>{{ schedule.startTime | time }} - {{ schedule.endTime | time }}</span>
+        </span>
+      </div>
+    </div>
+    <pagination [disabled]="fetching" [totalItems]="pagination.total" [(ngModel)]="pagination.page" [itemsPerPage]="pagination.limit" (pageChanged)="pageChanged($event)"></pagination>
+  </div>
+  <div *ngIf="!restaurants || !restaurants.length">
+    <h3>No Result Found</h3>
+  </div>
+</div>
