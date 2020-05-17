@@ -35,7 +35,10 @@
     <div class="card mb-3"
       [ngClass]="{'border-warning': search.name && restaurant.name.toLowerCase().indexOf(search.name.toLowerCase()) === 0}"
       *ngFor="let restaurant of restaurants">
-      <div class="card-header"> {{ restaurant.name }} </div>
+      <div class="card-header">
+        {{ restaurant.name }}
+        <button type="button" class="btn btn-primary btn-sm float-right" (click)="addToCollection(restaurant._id, collectionModal)">Add to collection</button>
+      </div>
       <div class="card-body">
         <span class="badge badge-pill"
         [ngClass]="{'badge-warning': search.time && isTimeMatch(schedule.startTime, schedule.endTime), 'badge-light': !(search.time && isTimeMatch(schedule.startTime, schedule.endTime))}"
@@ -53,3 +56,44 @@
     <h3>No Result Found</h3>
   </div>
 </div>
+
+<ng-template #collectionModal>
+  <div class="modal-header">
+    Select Collection
+  </div>
+  <div class="modal-body text-center">
+    <alert type="danger" *ngIf="addRestaurantError">
+      {{ addRestaurantError }}
+    </alert>
+    <button type="button" class="btn btn-secondary btn-block" (click)="selectCollection(collection._id)" *ngFor="let collection of collections"> {{ collection.name }} ({{collection.restaurants.length}}) </button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-block" (click)="createCollection(createCollectionModal)"> New Collection </button>
+  </div>
+</ng-template>
+
+<ng-template #createCollectionModal>
+  <form #collectionForm="ngForm" (ngSubmit)="onCollectionSubmit(collectionForm)" novalidate autocomplete="off">
+    <div class="modal-header">
+      Create Collection
+    </div>
+    <div class="modal-body text-center">
+      <alert type="danger" *ngIf="collectionError">
+        {{ collectionError }}
+      </alert>
+      <div class="form-group">
+        <label for="name"> Name </label>
+        <input name="name" type="text" class="form-control" id="name" #name="ngModel" placeholder="Enter name" required="required"
+          [ngClass]="{ 'is-valid': (name.dirty || name.touched || collectionForm.submitted) && name.valid, 'is-invalid': (name.dirty || name.touched || collectionForm.submitted) && name.invalid }"
+          [(ngModel)]="newCollection.name">
+        <div class="invalid-feedback" *ngIf="name.errors">
+          <p *ngIf="name.errors.required">Name is required!</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary form-control" [disabled]="collectionForm.invalid"> Create </button>
+      <button type="button" class="btn btn-secondary form-control" (click)="onCreateCollectionCancel()"> Cancel </button>
+    </div>
+  </form>
+</ng-template>

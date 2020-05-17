@@ -17,6 +17,10 @@ export class UsersService {
     return this.api.post('users', user, undefined, false);
   }
 
+  collections() {
+    return this.api.get('users/collections');
+  }
+
   login(user: User) {
     return new Observable(subscriber => {
       this.api.post('users/login', user, undefined, false)

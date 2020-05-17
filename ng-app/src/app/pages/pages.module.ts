@@ -8,12 +8,14 @@ import { BootstrapModule } from '../bootstrap/bootstrap.module';
 import { PipesModule } from '../pipes/pipes.module';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { CollectionsComponent } from './collections/collections.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    CollectionsComponent
   ],
   imports: [
     CommonModule,

@@ -39,7 +39,6 @@ router.get('/', function(req, res, next) {
         ] }
       ];
     }
-    console.log(JSON.stringify(scheduleQuery));
     const aggregation = [
       // Match day & time
       { '$match': scheduleQuery },

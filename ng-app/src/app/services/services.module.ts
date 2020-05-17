@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { RestaurantsService } from './restaurants.service';
 import { UsersService } from './users.service';
+import { CollectionsService } from './collections.service';
 
 @NgModule({
   declarations: [],
@@ -14,7 +15,8 @@ import { UsersService } from './users.service';
   providers: [
     ApiService,
     RestaurantsService,
-    UsersService
+    UsersService,
+    CollectionsService
   ],
 })
 export class ServicesModule { }

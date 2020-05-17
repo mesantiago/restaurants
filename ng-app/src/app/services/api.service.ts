@@ -6,7 +6,6 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 })
 export class ApiService {
   url: string = 'http://localhost:3000/api';
-  authHeaders: HttpHeaders;
 
   constructor(
     public http: HttpClient
@@ -14,17 +13,13 @@ export class ApiService {
 
   }
 
-  // generateAuthHeaders(credentials?): Promise<HttpHeaders> {
-  //   return this.settings.getValue('credentials')
-  //     .then((credentialsFromSettings: any):HttpHeaders => {
-  //       var headers =  new HttpHeaders();
-  //       if (credentialsFromSettings || credentials) {
-  //         headers = headers.append("Authorization", (credentialsFromSettings || credentials).id);
-  //       }
-  //       this.authHeaders = headers;
-  //       return headers;
-  //     });
-  // }
+  getAuthHeaders(credentials?): HttpHeaders {
+    var headers =  new HttpHeaders();
+    if (localStorage.getItem('token')) {
+      headers = headers.append("Authorization", 'Bearer ' + localStorage.getItem('token'));
+    }
+    return headers;
+  }
 
   get(endpoint: string, params?: any, reqOpts?: any, authenticate: boolean = true) {
     if (!reqOpts) {
@@ -45,7 +40,7 @@ export class ApiService {
     }
 
     if (authenticate) {
-      reqOpts.headers = reqOpts.headers.append("Authorization", this.authHeaders.get("Authorization"));
+      reqOpts.headers = reqOpts.headers.append("Authorization", this.getAuthHeaders().get("Authorization"));
     }
 
     return this.http.get(this.url + '/' + endpoint, reqOpts);
@@ -59,7 +54,7 @@ export class ApiService {
     }
 
     if (authenticate) {
-      reqOpts.headers = reqOpts.headers.append("Authorization", this.authHeaders.get("Authorization"));
+      reqOpts.headers = reqOpts.headers.append("Authorization", this.getAuthHeaders().get("Authorization"));
     }
 
     return this.http.post(this.url + '/' + endpoint, body, reqOpts);
@@ -73,7 +68,7 @@ export class ApiService {
     }
 
     if (authenticate) {
-      reqOpts.headers = reqOpts.headers.append("Authorization", this.authHeaders.get("Authorization"));
+      reqOpts.headers = reqOpts.headers.append("Authorization", this.getAuthHeaders().get("Authorization"));
     }
 
     return this.http.put(this.url + '/' + endpoint, body, reqOpts);
@@ -87,7 +82,7 @@ export class ApiService {
     }
 
     if (authenticate) {
-      reqOpts.headers = reqOpts.headers.append("Authorization", this.authHeaders.get("Authorization"));
+      reqOpts.headers = reqOpts.headers.append("Authorization", this.getAuthHeaders().get("Authorization"));
     }
 
     return this.http.delete(this.url + '/' + endpoint, reqOpts);
@@ -101,7 +96,7 @@ export class ApiService {
     }
 
     if (authenticate) {
-      reqOpts.headers = reqOpts.headers.append("Authorization", this.authHeaders.get("Authorization"));
+      reqOpts.headers = reqOpts.headers.append("Authorization", this.getAuthHeaders().get("Authorization"));
     }
 
     return this.http.patch(this.url + '/' + endpoint, body, reqOpts);
