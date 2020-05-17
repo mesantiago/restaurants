@@ -1,0 +1,68 @@
+<h3> Your Collections: </h3>
+
+<div class="card mb-3" *ngFor="let collection of collections">
+  <div class="card-header">
+    {{ collection.name }} Collection
+    <span *ngFor="let owner of collection.owners">
+      <span class="badge badge-warning badge-pill mr-2" *ngIf="owner._id !== getCurrentUserId()">{{ owner.email }} </span>
+    </span>
+    <button type="button" class="btn btn-danger btn-sm float-right" (click)="deleteCollection(collection, deleteCollectionModal)"> Delete </button>
+    <button type="button" class="btn btn-success btn-sm float-right" (click)="editCollection(collection, editCollectionModal)"> Edit </button>
+  </div>
+  <div class="card-body">
+    <div class="card" *ngFor="let restaurant of collection.restaurants">
+      <div class="card-header">
+        {{ restaurant.name }}
+        <button type="button" class="btn btn-danger btn-sm float-right" (click)="deleteRestaurant(collection, restaurant)"> Remove </button>
+      </div>
+      <div class="card-body">
+        <span class="badge badge-primary badge-pill" *ngFor="let schedule of groupSchedule(restaurant.schedule)">
+          <span class="badge badge-light badge-pill mr-2" *ngFor="let day of schedule.days"> {{ day | days }} </span>
+          <span>{{ schedule.startTime | time }} - {{ schedule.endTime | time }}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #editCollectionModal>
+  <form #collectionForm="ngForm" (ngSubmit)="onCollectionSubmit(collectionForm)" novalidate autocomplete="off">
+    <div class="modal-header">
+      Update Collection
+    </div>
+    <div class="modal-body text-center">
+      <alert type="danger" *ngIf="collectionError">
+        {{ collectionError }}
+      </alert>
+      <div class="form-group">
+        <label for="name"> Name </label>
+        <input name="name" type="text" class="form-control" id="name" #name="ngModel" placeholder="Enter name" required="required"
+          [ngClass]="{ 'is-valid': (name.dirty || name.touched || collectionForm.submitted) && name.valid, 'is-invalid': (name.dirty || name.touched || collectionForm.submitted) && name.invalid }"
+          [(ngModel)]="updateCollection.name">
+        <div class="invalid-feedback" *ngIf="name.errors">
+          <p *ngIf="name.errors.required">Name is required!</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary form-control" [disabled]="collectionForm.invalid"> Save </button>
+      <button type="button" class="btn btn-secondary form-control" (click)="onCreateCollectionCancel()"> Cancel </button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #deleteCollectionModal>
+  <div class="modal-header">
+    Delete Collection
+  </div>
+  <div class="modal-body text-center">
+    <alert type="danger" *ngIf="collectionError">
+      {{ collectionError }}
+    </alert>
+    Are you sure you want to delete {{ collection.name }} collection?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger form-control" (click)="onDelete()"> Yes </button>
+    <button type="button" class="btn btn-secondary form-control" (click)="onCancelDelete()"> Cancel </button>
+  </div>
+</ng-template>

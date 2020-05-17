@@ -67,6 +67,8 @@ protectedRouter.get('/collections', function(req, res, next) {
   Collection.find({
     owners: req.token.user._id
   })
+  .populate('owners')
+  .populate({ path: 'restaurants', populate: { path: 'schedule' }})
   .then(function(collections) {
     res.json({ data: collections });
   })

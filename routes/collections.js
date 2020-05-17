@@ -54,7 +54,7 @@ protectedRouter.put('/:id', function(req, res, next) {
   .catch(next);
 });
 
-/* PUT collection update. */
+/* PUT collection add restaurant. */
 protectedRouter.put('/:id/add', function(req, res, next) {
   Collection.findOne({
     _id: req.params.id,
@@ -77,6 +77,31 @@ protectedRouter.put('/:id/add', function(req, res, next) {
   .catch(next);
 });
 
+/* DELETE collection remove restaurant. */
+protectedRouter.delete('/:id/remove/:restaurantId', function(req, res, next) {
+  Collection.findOne({
+    _id: req.params.id,
+    owners: req.token.user._id
+  })
+  .then(function(collection) {
+    if (!collection) {
+      throw new Error('Cannot find colletion');
+    }
+    if (collection.restaurants.indexOf(req.params.restaurantId) < 0) {
+      throw new Error('Not in the collection');
+    } else {
+      collection.restaurants.splice(collection.restaurants.indexOf(req.params.restaurantId), 1);
+    }
+    return collection.save();
+  })
+  .then(function() {
+    res.json({
+      message: 'Successfully removed!'
+    });
+  })
+  .catch(next);
+});
+
 /* DELETE collection delete. */
 protectedRouter.delete('/:id', function(req, res, next) {
   Collection.findOne({
@@ -89,7 +114,7 @@ protectedRouter.delete('/:id', function(req, res, next) {
     }
     return collection.delete();
   })
-  .then(function({ id, owners }) {
+  .then(function() {
     res.json({
       message: 'Successfully deleted!'
     });
